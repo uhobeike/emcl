@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -exv
 
 xvfb-run -s "-screen 0 1400x900x24" bash || true
 
