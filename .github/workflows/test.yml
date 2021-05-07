@@ -31,4 +31,5 @@ jobs:
          catkin_make
       - name: Execute and Test
         run: |
+         source /opt/ros/melodic/setup.bash
          ~/catkin_ws/src/emcl/test/er_test.bash

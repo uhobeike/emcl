@@ -1,11 +1,16 @@
 #!/bin/bash
 
+source /opt/ros/noetic/setup.bash
+source ~/catkin_ws/devel/setup.bash
+export ROS_MASTER_URI=http://localhost:11311
+export ROS_HOSTNAME=localhost
+
 xvfb-run -s "-screen 0 1400x900x24" bash
 
 killall roslaunch
 killall gzclient
 
-roslaunch emcl test.launch &> /dev/null &
+roslaunch emcl test.launch &
 
 sleep 15
 
