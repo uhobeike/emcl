@@ -18,7 +18,7 @@ jobs:
          cd ros_setup_scripts_Ubuntu18.04_server 
          bash step0.bash
          bash step1.bash
-         sudo apt-get install libgazebo9-dev ros-melodic-gazebo-dev ros-melodic-gazebo-ros ros-melodic-tf ros-melodic-map-server ros-melodic-turtlebot3-navigation xvfb ros-melodic-turtlebot3-gazebo
+         sudo apt-get install libignition-transport4-dev libgazebo9-dev ros-melodic-gazebo-dev ros-melodic-gazebo-ros ros-melodic-tf ros-melodic-map-server ros-melodic-turtlebot3-navigation xvfb ros-melodic-turtlebot3-gazebo
          sudo pip3 install rospkg
          mkdir -p ~/.ros/log/
       - name: Build catkin_ws
