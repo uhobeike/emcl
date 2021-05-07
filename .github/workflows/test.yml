@@ -18,7 +18,6 @@ jobs:
          cd ros_setup_scripts_Ubuntu18.04_desktop
          bash step0.bash
          bash step1.bash
-         curl -sSL http://get.gazebosim.org | sh
          sudo apt-get install ros-melodic-tf ros-melodic-map-server xvfb
          sudo pip3 install rospkg
          mkdir -p ~/.ros/log/
