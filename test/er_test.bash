@@ -1,14 +1,9 @@
-#!/bin/bash
+#!/bin/bash -e
 
-source /opt/ros/noetic/setup.bash
-source ~/catkin_ws/devel/setup.bash
-export ROS_MASTER_URI=http://localhost:11311
-export ROS_HOSTNAME=localhost
+xvfb-run -s "-screen 0 1400x900x24" bash || true
 
-xvfb-run -s "-screen 0 1400x900x24" bash
-
-killall roslaunch
-killall gzclient
+killall roslaunch || true
+killall gzclient || true
 
 roslaunch emcl test.launch &
 
@@ -37,7 +32,7 @@ awk '{print $0}
 
 RESULT=$?
 
-killall roslaunch
-killall gzclient
+killall roslaunch || true
+killall gzclient || true
 
 exit $RESULT
