@@ -19,7 +19,7 @@ jobs:
          bash step0.bash
          bash step1.bash
          curl -sSL http://get.gazebosim.org | sh
-         sudo apt-get install ros-melodic-tf ros-melodic-map-server ros-melodic-turtlebot3-navigation ros-melodic-turtlebot3-gazebo xvfb
+         sudo apt-get install ros-melodic-tf ros-melodic-map-server xvfb
          sudo pip3 install rospkg
          mkdir -p ~/.ros/log/
       - name: Build catkin_ws
@@ -28,6 +28,10 @@ jobs:
          mkdir -p ~/catkin_ws/src
          cd ~/catkin_ws/src
          git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/ryuichiueda/emcl.git
+         git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/ROBOTIS-GIT/turtlebot3.git
+         git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/ROBOTIS-GIT/turtlebot3_gazebo_plugin.git
+         git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+         git clone -b "${GITHUB_REF#refs/heads/}" https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
          cd ../
          catkin_make
       - name: Execute and Test
