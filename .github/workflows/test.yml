@@ -31,6 +31,7 @@ jobs:
          git clone https://github.com/ROBOTIS-GIT/turtlebot3_gazebo_plugin.git
          git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
          git clone https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+         rosdep install -i --from-paths turtlebot3 turtlebot3_simulations turtlebot3_gazebo_plugin
          cd ../
          catkin_make
       - name: Execute and Test
