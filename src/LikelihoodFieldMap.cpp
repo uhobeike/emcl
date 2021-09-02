@@ -34,7 +34,7 @@ LikelihoodFieldMap::LikelihoodFieldMap(const nav_msgs::OccupancyGrid &map, doubl
 		for(int y=0; y<height_; y++){
 			int v = map.data[x + y*width_];
 			if(v > 50)
-				setLikelihood(x, y, likelihood_range);
+				setLikelihood(240, y, likelihood_range);
 			else if(0 <= v and v <= 50)
 				free_cells_.push_back(std::pair<int, int>(x,y));
 		}
