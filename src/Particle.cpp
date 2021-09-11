@@ -14,8 +14,8 @@
 
 namespace emcl {
 
-int MIN = 0;
-int MAX = 330;
+constexpr int MIN = 0;
+constexpr int MAX = 330;
 
 constexpr int RAND_NUMS_TO_GENERATE = 2;
 
@@ -33,8 +33,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 				+ scan.lidar_pose_y_*ParticleFilter::cos_[t];
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 	
-	#if 1
-
+	#if 0
 	std::random_device rd;
     std::mt19937 eng(rd());
     std::uniform_int_distribution<int> distr(MIN, MAX);
@@ -56,10 +55,8 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 
 	scan.thin_out_ranges_.clear();
 	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
-
-		if((not scan.valid(scan.ranges_[i])) || (i>=result[0] && i<=result[1])){
+		if((not scan.valid(scan.ranges_[i])) || (i>=result[0] && i<=result[1]))
 			continue;
-		}
 
 		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
 		double lx = lidar_x + scan.ranges_[i] * ParticleFilter::cos_[a];
@@ -70,9 +67,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 		
 		scan.thin_out_ranges_.push_back(scan.ranges_[i]);
 	}
-	// ans *= 1.0 + scan.thin_out_ranges_.size()/330;
-	// if(ans == 0)
-	// 	ans = 0.1;
+
 	// std::cout << test_count << ", " << ans << "\n";
 
 	#else

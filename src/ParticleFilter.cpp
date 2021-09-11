@@ -103,25 +103,28 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 			);
 
 	double valid_pct = 0.0;
-	int valid_beams_ = scan.countValidBeams(&valid_pct);
-	// if(valid_beams_ == 0)
-	// 	return;
+	int valid_beams = scan.countValidBeams(&valid_pct);
+	if(valid_beams == 0)
+		return;
 
-	int valid_beams_sum = 0;
+	#if 0
+	int valid_thin_out_beams_sum = 0;
 	for(auto &p : particles_){
 		double x = p.likelihood(map_.get(), scan);
-		int valid_beams = scan.countValidThinOutBeams(&valid_pct);
-		// if(valid_beams == 0)
-		// 	return;
+		int valid_thin_out_beams = scan.countValidThinOutBeams(&valid_pct);
 		p.w_ *= x;
-		std::cout <<  p.w_ << "\n";
-		valid_beams_sum += valid_beams;
+		valid_thin_out_beams_sum += valid_thin_out_beams;
 	}
-	valid_beams_sum = valid_beams_sum/particles_.size();
-	double debug_nor = normalize();
-	// std::cout << debug_nor << ", " << valid_beams_sum << "\n";
+	valid_thin_out_beams_sum = valid_thin_out_beams_sum/particles_.size();
 
-	alpha_ = debug_nor/valid_beams_sum;
+	alpha_ = normalize()/valid_thin_out_beams_sum;
+
+	#else
+	for(auto &p : particles_)
+	p.w_ *= p.likelihood(map_.get(), scan);
+
+	alpha_ = normalize()/valid_beams;
+	#endif
 
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_ERROR("RESET");
