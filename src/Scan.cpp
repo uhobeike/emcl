@@ -44,6 +44,19 @@ int Scan::countValidBeams(double *rate)
 	return ans;
 }
 
+int Scan::countValidThinOutBeams(double *rate)
+{
+	int ans = 0;
+	for(int i=0; i<thin_out_ranges_.size(); i+=scan_increment_)
+		if(valid(thin_out_ranges_[i]))
+			ans++;
+
+	if(rate != NULL)
+		*rate = (double)ans/thin_out_ranges_.size()*scan_increment_;
+
+	return ans;
+}
+
 bool Scan::valid(double range)
 {
 	if( std::isnan(range) or std::isinf(range) )
