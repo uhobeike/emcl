@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/ikebe/active/emcl_ws/devel/include/**",
+        "/home/ikebe/active/emcl_ws/src/emcl/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/ikebe/active/emcl_ws/src/emcl/include/**",
+        "/home/ikebe/active/emcl_ws/src/turtlebot3_aws_2021/turtlebot3_simulations/turtlebot3_fake/include/**",
+        "/home/ikebe/active/emcl_ws/src/turtlebot3_aws_2021/turtlebot3_simulations/turtlebot3_gazebo/include/**",
+        "/home/ikebe/active/emcl_ws/src/turtlebot3_aws_2021/turtlebot3/turtlebot3_navigation/include/**",
+        "/home/ikebe/active/emcl_ws/src/turtlebot3_aws_2021/turtlebot3/turtlebot3_slam/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
