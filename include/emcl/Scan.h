@@ -30,10 +30,13 @@ public:
 	double lidar_pose_yaw_;
 
 	std::vector<double> ranges_;
+	std::vector<double> thin_out_ranges_;
+
 	std::vector<uint16_t> directions_16bit_;
 
 	Scan& operator=(const Scan &s);
 	int countValidBeams(double *rate = NULL);
+	int countValidThinOutBeams(double *rate = NULL);
 	bool valid(double range);
 };
 
