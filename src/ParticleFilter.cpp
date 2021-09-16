@@ -78,6 +78,47 @@ void ParticleFilter::resampling(void)
 
 	for(int i=0; i<particles_.size(); i++)
 		particles_[i] = old[chosen[i]];
+	
+	constexpr int MIN = 1;
+	constexpr int MAX = 500;
+	constexpr int RAND_NUMS_TO_GENERATE = 50;
+	
+	std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<int> distr(MIN, MAX);
+	std::vector<int> result;
+
+	for (int i=0;i<RAND_NUMS_TO_GENERATE;i++){
+		result.push_back(distr(eng));
+	}
+ 	
+	// std::sort(result.begin(), result.end());
+
+	// for(auto &r : result){
+	// 	std::cout << r << ", ";
+	// }
+	// std::cout << "\n";
+
+	// int random_scan_cnt = 0;
+	// for(auto &p : particles_){
+	// 	random_scan_cnt++;
+	// 	if (result.end() != std::find(result.begin(), result.end(), random_scan_cnt)){
+	// 		// std::cout << random_scan_cnt << ", ";
+	// 		p.randomScan(p);
+	// 	}
+	// }
+	// std::cout << "\n";
+	// exit(1);
+
+	int random_scan_cnt = 0;
+	for(auto &p : particles_){
+		random_scan_cnt++;
+		if (result.end() != std::find(result.begin(), result.end(), random_scan_cnt) || p.w_ == 0){
+			// std::cout << random_scan_cnt << ", ";
+			p.randomScan(p);
+		}
+	}
+
 }
 
 void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t)
@@ -107,18 +148,31 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	if(valid_beams == 0)
 		return;
 
-	#if 0
-	int valid_thin_out_beams_sum = 0;
-	for(auto &p : particles_){
-		double x = p.likelihood(map_.get(), scan);
-		int valid_thin_out_beams = scan.countValidThinOutBeams(&valid_pct);
-		p.w_ *= x;
-		valid_thin_out_beams_sum += valid_thin_out_beams;
+	#if 1
+	static bool init_random_scan = true;
+	if (init_random_scan){
+		for(auto &p : particles_){
+			p.randomScan(p);
+			// std::cout << p.s_.angles_[0] <<  ", " << p.s_.angles_[1] << "\n";
+		}
 	}
-	valid_thin_out_beams_sum = valid_thin_out_beams_sum/particles_.size();
+	init_random_scan = false;
 
-	alpha_ = normalize()/valid_thin_out_beams_sum;
-
+	double valid_thin_out_beams_max = 0;
+	double ans_sum = 0;
+	for(auto &p : particles_){
+		double x = p.likelihood(map_.get(), scan, p);
+		// std::cout << x << ", ";
+		p.w_ *= x;
+		ans_sum +=x;
+		// valid_thin_out_beams_max = std::max(valid_thin_out_beams_max, scan.countValidThinOutBeams());
+		valid_thin_out_beams_max += scan.countValidThinOutBeams();
+	}
+	// std::cout << "\n";
+	// valid_thin_out_beams_max = valid_thin_out_beams_max/particles_.size();
+	// std::cout << valid_thin_out_beams_max << "\n";
+	alpha_ = ans_sum/valid_thin_out_beams_max;
+	normalize();
 	#else
 	for(auto &p : particles_)
 	p.w_ *= p.likelihood(map_.get(), scan);
@@ -286,6 +340,7 @@ void ParticleFilter::expansionReset(void)
 
 void ParticleFilter::simpleReset(void)
 {
+	ROS_ERROR("simple_reset");
 	std::vector<Pose> poses;
 	map_->drawFreePoses(particles_.size(), poses);
 

@@ -14,6 +14,8 @@
 #include "nav_msgs/GetMap.h"
 #include "std_msgs/Float32.h"
 
+#include <chrono>
+
 namespace emcl {
 
 MclNode::MclNode() : private_nh_("~") 
@@ -146,20 +148,24 @@ void MclNode::loop(void)
 		ROS_INFO("can't get lidar pose info");
 		return;
 	}
+	
+	std::chrono::system_clock::time_point start, end;
+	start = std::chrono::system_clock::now(); 
 
-	/*
-	struct timespec ts_start, ts_end;
-	clock_gettime(CLOCK_REALTIME, &ts_start);
-	*/
 	pf_->sensorUpdate(lx, ly, lt);
-	/*
-	clock_gettime(CLOCK_REALTIME, &ts_end);
-	struct tm tm;
-	localtime_r( &ts_start.tv_sec, &tm);
-	printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
-	localtime_r( &ts_end.tv_sec, &tm);
-	printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
-	*/
+
+	end = std::chrono::system_clock::now(); 
+	auto time = end - start;
+	
+	if(std::chrono::duration_cast<std::chrono::nanoseconds>(time).count() > 1000){
+		static double time_sum = 0;
+		static double mean_time = 0;
+		static double time_cnt = 0;
+		time_cnt++;
+		time_sum += std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
+		mean_time = time_sum/time_cnt;
+		// std::cout << std::fixed << std::setprecision(9) << mean_time << "\n"; 
+	}
 
 	double x_var, y_var, t_var, xy_cov, yt_cov, tx_cov;
 	pf_->meanPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);
