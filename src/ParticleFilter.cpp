@@ -117,8 +117,9 @@ void ParticleFilter::resampling(void)
 			// std::cout << random_scan_cnt << ", ";
 			p.randomScan(p);
 		}
+		// std::cout << p.w_ << ", ";
 	}
-
+	// std::cout << "\n";
 }
 
 void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t)

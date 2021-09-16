@@ -98,6 +98,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &parti
 	int cnt = 0;
 	scan.thin_out_ranges_.clear();
 	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
+		
 		if((not scan.valid(scan.ranges_[i])) || (i<particle.s_.angles_[0] || i>particle.s_.angles_[1]))
 			continue;
 
@@ -111,7 +112,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &parti
 		cnt++;
 		// std::cout << i << ", ";
 	}
-	// std::cout << cnt; 
+	// std::cout << cnt << ", " << ans << "\n"; 
 	// std::cout << "\n";
 	return ans;
 }
@@ -128,7 +129,7 @@ void Particle::randomScan(Particle &p)
 		for (int i=0;i<RAND_NUMS_TO_GENERATE;i++)
 			result.push_back(distr(eng));
 			std::sort(result.begin(), result.end());
-	} while (((result[1] - result[0]) >250 || (result[1] - result[0]) <5));
+	} while (((result[1] - result[0]) >100 || (result[1] - result[0]) <1));
 	// std::cout << result[0] << ", " << result[1] << "\n";
 
 	p.s_.angles_.clear();
