@@ -156,6 +156,7 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 			// std::cout << p.s_.angles_[0] <<  ", " << p.s_.angles_[1] << "\n";
 		}
 	}
+
 	init_random_scan = false;
 
 	double valid_thin_out_beams_max = 0;
@@ -166,7 +167,7 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 		p.w_ *= x;
 		ans_sum +=x;
 		// valid_thin_out_beams_max = std::max(valid_thin_out_beams_max, scan.countValidThinOutBeams());
-		valid_thin_out_beams_max += scan.countValidThinOutBeams();
+		valid_thin_out_beams_max += scan.thin_out_ranges_.size();
 	}
 	// std::cout << "\n";
 	// valid_thin_out_beams_max = valid_thin_out_beams_max/particles_.size();
@@ -183,8 +184,8 @@ void ParticleFilter::sensorUpdate(double lidar_x, double lidar_y, double lidar_t
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_ERROR("RESET");
 		expansionReset();
-		for(auto &p : particles_)
-			p.w_ *= p.likelihood(map_.get(), scan);
+		// for(auto &p : particles_)
+			// p.w_ *= p.likelihood(map_.get(), scan);
 	}
 
 	if(normalize() > 0.000001)

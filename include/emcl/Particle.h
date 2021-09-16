@@ -22,7 +22,7 @@ class Particle
 public:
 	Particle(double x, double y, double t, double w);
 
-	double likelihood(LikelihoodFieldMap *map, Scan &scan);
+	// double likelihood(LikelihoodFieldMap *map, Scan &scan);
 	double likelihood(LikelihoodFieldMap *map, Particle &scan);
 	double likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &particle);
 	void randomScan(Particle &p);

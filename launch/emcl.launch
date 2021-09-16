@@ -25,7 +25,7 @@
     <param name="odom_rot_dev_per_fw"      value="0.13"/>
     <param name="odom_rot_dev_per_rot"     value="0.2"/>
 
-    <param name="laser_likelihood_max_dist" value="0.2"/>
+    <param name="laser_likelihood_max_dist" value="0.5"/>
 
     <param name="alpha_threshold" value="0.0"/>
     <param name="open_space_threshold" value="0.05"/>
