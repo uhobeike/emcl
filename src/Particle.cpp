@@ -29,7 +29,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 
 	double ans = 0.0;
-	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
+	for(int i=90;i<130;i+=scan.scan_increment_){
 		if(not scan.valid(scan.ranges_[i]))
 			continue;
 		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
