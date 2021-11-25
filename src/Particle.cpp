@@ -39,7 +39,29 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 	return ans;
 }
 
-void Particle::randomScan(Particle &p)
+double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &p)
+{
+	uint16_t t = p_.get16bitRepresentation();
+	double lidar_x = p_.x_ + scan.lidar_pose_x_*Mcl::cos_[t] 
+				- scan.lidar_pose_y_*Mcl::sin_[t];
+	double lidar_y = p_.y_ + scan.lidar_pose_x_*Mcl::sin_[t] 
+				+ scan.lidar_pose_y_*Mcl::cos_[t];
+	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
+
+	double ans = 0.0;
+	for (auto& i : p.angles_[p.angle_]){
+		if(not scan.valid(scan.ranges_[i]))
+			continue;
+		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
+		double lx = lidar_x + scan.ranges_[i] * Mcl::cos_[a];
+		double ly = lidar_y + scan.ranges_[i] * Mcl::sin_[a];
+
+		ans += map->likelihood(lx, ly);
+	}
+	return ans;
+}
+
+void Particle::randomScan(Particle &p, Particle &pra)
 {	
   constexpr int MIN = 0;
   constexpr int MAX = 4;
@@ -48,6 +70,7 @@ void Particle::randomScan(Particle &p)
   std::uniform_int_distribution<int> distr(MIN, MAX);
 	
 	p.angle_ = distr(eng);
+  p.angles_ = pra.angles_;
 }
 
 bool Particle::isPenetrating(LikelihoodFieldMap *map, Scan &scan, double threshold, bool replace)
