@@ -105,12 +105,11 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 	for(auto &p : particles_){
     double w = 0;
     w = p.likelihood(map_.get(), scan, p);
+    w = (w/p.angles_[p.angle_].size())*100;
 		p.w_ *= w;
     std::cout << w << ",";
   }
   std::cout << "\n";
-
-  exit(0);
 
 	alpha_ = normalizeBelief()/valid_beams;
 	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version
