@@ -78,11 +78,11 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
   // }
   // std::cout << "\n";
 
-  for (auto &p : particles_)
-  {
-    std::cout << p.angle_ << ", ";
-  }
-  std::cout << "\n";
+  // for (auto &p : particles_)
+  // {
+  //   std::cout << p.angle_ << ", ";
+  // }
+  // std::cout << "\n";
 
 	int i = 0;
 	if (!inv) {
@@ -107,11 +107,11 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     w = p.likelihood(map_.get(), scan, p);
     w = (w/p.angles_[p.angle_].size())*100;
 		p.w_ *= w;
-    std::cout << w << ",";
+    // std::cout << w << ",";
   }
-  std::cout << "\n";
+  // std::cout << "\n";
 
-	alpha_ = normalizeBelief()/valid_beams;
+	alpha_ = normalizeBelief()/100;
 	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version
 	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
