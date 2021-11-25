@@ -45,6 +45,55 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 	scan.lidar_pose_y_ = lidar_y;
 	scan.lidar_pose_yaw_ = lidar_t;
 
+  static bool init_random_scan_angle_flag = true;
+  static Particle pra(0,0,0,0);
+  if (init_random_scan_angle_flag)
+  {
+    int angle_num = 4;
+    int angle_size = 360;
+    int angle_size_min = 0;
+    int angle_size_max = 90;
+    pra.angles_.resize(angle_num);
+    for (int i = 0; i < angle_num; i++)
+    {
+      for (int j = 0; j < angle_size; j++)
+      {
+        if((angle_size_min<=j) && (j<=angle_size_max))
+          continue;
+        pra.angles_[i].push_back(j);
+      }
+      angle_size_min += 90;
+      angle_size_max += 90;
+    }    
+    init_random_scan_angle_flag = false;
+  }
+  
+  for (auto& value : pra.angles_[0])
+  {
+    std::cout << value;
+  }
+  std::cout << "\n";
+
+  for (auto& value : pra.angles_[1])
+  {
+    std::cout << value;
+  }
+  std::cout << "\n";
+
+  for (auto& value : pra.angles_[2])
+  {
+    std::cout << value;
+  }
+  std::cout << "\n";
+
+  for (auto& value : pra.angles_[3])
+  {
+    std::cout << value;
+  }
+  std::cout << "\n";
+
+  exit(0);
+
 	int i = 0;
 	if (!inv) {
 		for(auto e : scan.ranges_)

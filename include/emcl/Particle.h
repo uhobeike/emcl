@@ -23,8 +23,12 @@ public:
 
 	double likelihood(LikelihoodFieldMap *map, Scan &scan);
 	bool isPenetrating(LikelihoodFieldMap *map, Scan &scan, double threshold, bool replace);
-	Pose p_;
+	void randomScan(Particle &p);
+  
+  Pose p_;
 	double w_;
+  int angle_;
+  std::vector<std::vector<int>> angles_;
 
 	Particle operator =(const Particle &p);
 private:
