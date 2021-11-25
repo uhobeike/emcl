@@ -12,10 +12,6 @@
 
 namespace emcl {
 
-constexpr int MIN = 0;
-constexpr int MAX = 3;
-constexpr int RAND_NUMS_TO_GENERATE = 1;
-
 Particle::Particle(double x, double y, double t, double w) : p_(x, y, t)
 {
 	w_ = w;
@@ -45,12 +41,13 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 
 void Particle::randomScan(Particle &p)
 {	
+  constexpr int MIN = 0;
+  constexpr int MAX = 4;
 	std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<int> distr(MIN, MAX);
 	
 	p.angle_ = distr(eng);
-  // p.angles[p.angle_];
 }
 
 bool Particle::isPenetrating(LikelihoodFieldMap *map, Scan &scan, double threshold, bool replace)

@@ -49,7 +49,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
   static Particle pra(0,0,0,0);
   if (init_random_scan_angle_flag)
   {
-    int angle_num = 4;
+    int angle_num = 5;
     int angle_size = 360;
     int angle_size_min = 0;
     int angle_size_max = 90;
@@ -58,41 +58,31 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     {
       for (int j = 0; j < angle_size; j++)
       {
-        if((angle_size_min<=j) && (j<=angle_size_max))
+        if((angle_size_min<=j) && (j<=angle_size_max) && (i < angle_num-1))
           continue;
         pra.angles_[i].push_back(j);
       }
       angle_size_min += 90;
       angle_size_max += 90;
     }    
+
+    for(auto &p : particles_)
+		  p.randomScan(p);
+    
     init_random_scan_angle_flag = false;
   }
   
-  for (auto& value : pra.angles_[0])
-  {
-    std::cout << value;
-  }
-  std::cout << "\n";
+  // for (auto& value : pra.angles_[4])
+  // {
+  //   std::cout << value;
+  // }
+  // std::cout << "\n";
 
-  for (auto& value : pra.angles_[1])
-  {
-    std::cout << value;
-  }
-  std::cout << "\n";
-
-  for (auto& value : pra.angles_[2])
-  {
-    std::cout << value;
-  }
-  std::cout << "\n";
-
-  for (auto& value : pra.angles_[3])
-  {
-    std::cout << value;
-  }
-  std::cout << "\n";
-
-  exit(0);
+  // for (auto &p : particles_)
+  // {
+  //   std::cout << p.angle_ << ", ";
+  // }
+  // std::cout << "\n";
 
 	int i = 0;
 	if (!inv) {
