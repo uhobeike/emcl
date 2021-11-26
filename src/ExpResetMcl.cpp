@@ -107,22 +107,32 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     w = p.likelihood(map_.get(), scan, p);
     w = (w/p.angles_[p.angle_].size())*100;
 		p.w_ *= w;
-    std::cout << w << ",";
+    // std::cout << w << ",";
   }
-  std::cout << "\n";
+  // std::cout << "\n";
 
 	alpha_ = normalizeBelief()/100;
 	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version
 	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
+
+  static bool exp_flag = false;
 	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
 		ROS_INFO("RESET");
 		expansionReset();
-		for(auto &p : particles_)
-			p.w_ *= p.likelihood(map_.get(), scan);
+    for(auto &p : particles_){
+      double w = 0;
+      w = p.likelihood(map_.get(), scan, p);
+      w = (w/p.angles_[p.angle_].size())*100;
+      p.w_ *= w;
+      // std::cout << w << ",";
+    }
+    exp_flag = true;
 	}
 
-	if(normalizeBelief() > 0.000001)
-		resampling();
+	if(normalizeBelief() > 0.000001){
+		resampling(exp_flag);
+    exp_flag = false;
+  }
 	else
 		resetWeight();
 

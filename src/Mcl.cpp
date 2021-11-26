@@ -97,6 +97,60 @@ void Mcl::resampling(void)
 	}
 }
 
+void Mcl::resampling(bool& exp_flag)
+{
+	std::vector<double> accum;
+	accum.push_back(particles_[0].w_);
+	for(int i=1;i<particles_.size();i++){
+		accum.push_back(accum.back() + particles_[i].w_);
+	}
+
+	std::vector<Particle> old(particles_);
+
+	double start = (double)rand()/(RAND_MAX * particles_.size());
+	double step = 1.0/particles_.size();
+
+	std::vector<int> chosen;
+
+	int tick = 0;
+	for(int i=0; i<particles_.size(); i++){
+		while(accum[tick] <= start + i*step){
+			tick++;
+			if(tick == particles_.size()){
+				ROS_ERROR("RESAMPLING FAILED");
+				exit(1);
+			}	
+		}	
+		chosen.push_back(tick);
+	}
+
+	for(int i=0; i<particles_.size(); i++)
+		particles_[i] = old[chosen[i]];
+  
+  if(!exp_flag){
+    constexpr int MIN = 1;
+    constexpr int MAX = 500;
+    constexpr int RAND_NUMS_TO_GENERATE = 50;
+    
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<int> distr(MIN, MAX);
+    std::vector<int> result;
+
+    for (int i=0;i<RAND_NUMS_TO_GENERATE;i++){
+      result.push_back(distr(eng));
+    }
+
+    int random_scan_cnt = 0;
+    for(auto &p : particles_){
+      random_scan_cnt++;
+      if (result.end() != std::find(result.begin(), result.end(), random_scan_cnt)){
+        p.randomScan(p);
+      }
+    }
+  }
+}
+
 void Mcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
 {
 	if(processed_seq_ == scan_.seq_)

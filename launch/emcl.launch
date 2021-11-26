@@ -26,7 +26,7 @@
 
     <param name="laser_likelihood_max_dist" value="0.5"/>
 
-    <param name="alpha_threshold" value="0.0"/>
+    <param name="alpha_threshold" value="0.75"/>
     <param name="open_space_threshold" value="0.05"/>
 
     <param name="expansion_radius_position" value="0.1"/>

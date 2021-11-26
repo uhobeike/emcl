@@ -57,6 +57,7 @@ protected:
 
 	double normalizeAngle(double t);
 	void resampling(void);
+	void resampling(bool& exp_flag);
 	double normalizeBelief(void);
 	void resetWeight(void);
 
