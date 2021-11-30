@@ -53,7 +53,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     int angle_size = 360;
     int angle_size_min = 0;
     int angle_size_max = 90;
-    pra.angles_.resize(angle_num);
+    pra.angles_.resize(13);
     for (int i = 0; i < angle_num; i++)
     {
       for (int j = 0; j < angle_size; j++)
@@ -64,7 +64,41 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
       }
       angle_size_min += 90;
       angle_size_max += 90;
-    }    
+    }
+    angle_num = 9;
+    angle_size_min = 0;
+    angle_size_max = 180;
+    for (int i = 5; i < angle_num; i++)
+    {
+      for (int j = 0; j < angle_size; j++)
+      {
+        if((angle_size_min<=j) && (j<=angle_size_max) && (i != 7))
+          continue;
+        else if (!((angle_size_min<=j) && (j<=angle_size_max)) && (i == 7))
+          continue;
+        pra.angles_[i].push_back(j);
+      }
+      if (i != 6){
+        angle_size_min += 90;
+        angle_size_max += 90;
+      }
+    }
+
+    angle_num = 13;
+    angle_size = 360;
+    angle_size_min = 0;
+    angle_size_max = 90;
+    for (int i = 9; i < angle_num; i++)
+    {
+      for (int j = 0; j < angle_size; j++)
+      {
+        if(!((angle_size_min<=j) && (j<=angle_size_max)))
+          continue;
+        pra.angles_[i].push_back(j);
+      }
+      angle_size_min += 90;
+      angle_size_max += 90;
+    }
 
     for(auto &p : particles_)
 		  p.randomScan(p, pra);
@@ -72,7 +106,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     init_random_scan_angle_flag = false;
   }
   
-  // for (auto& value : pra.angles_[4])
+  // for (auto& value : pra.angles_[9])
   // {
   //   std::cout << value;
   // }

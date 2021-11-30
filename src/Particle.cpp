@@ -64,7 +64,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &p)
 void Particle::randomScan(Particle &p)
 {	
   constexpr int MIN = 0;
-  constexpr int MAX = 4;
+  constexpr int MAX = 12;
 	std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<int> distr(MIN, MAX);
@@ -75,7 +75,7 @@ void Particle::randomScan(Particle &p)
 void Particle::randomScan(Particle &p, Particle &pra)
 {	
   constexpr int MIN = 0;
-  constexpr int MAX = 4;
+  constexpr int MAX = 12;
 	std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<int> distr(MIN, MAX);
