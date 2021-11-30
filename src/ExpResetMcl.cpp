@@ -106,7 +106,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     init_random_scan_angle_flag = false;
   }
   
-  // for (auto& value : pra.angles_[9])
+  // for (auto& value : pra.angles_[0])
   // {
   //   std::cout << value;
   // }
@@ -138,12 +138,13 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 
 	for(auto &p : particles_){
     double w = 0;
-    w = p.likelihood(map_.get(), scan, p);
-    w = (w/p.angles_[p.angle_].size())*100;
+    uint16_t valid_beams_cnt = 0;
+    w = p.likelihood(map_.get(), scan, p, valid_beams_cnt);
+    w = (w/(p.angles_[p.angle_].size() - valid_beams_cnt))*100;
 		p.w_ *= w;
-    // std::cout << w << ",";
+    std::cout << valid_beams_cnt << ",";
   }
-  // std::cout << "\n";
+  std::cout << "\n";
 
 	alpha_ = normalizeBelief()/100;
 	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version

@@ -23,6 +23,7 @@ public:
 
 	double likelihood(LikelihoodFieldMap *map, Scan &scan);
 	double likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &p);
+  double likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &p, u_int16_t &valid_beams_cnt);
 	bool isPenetrating(LikelihoodFieldMap *map, Scan &scan, double threshold, bool replace);
 	void randomScan(Particle &p);
 	void randomScan(Particle &p, Particle &pra);
