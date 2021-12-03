@@ -50,9 +50,9 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
   if (init_random_scan_angle_flag)
   {
     int angle_num = 5;
-    int angle_size = 360;
+    int angle_size = scan.ranges_.size();
     int angle_size_min = 0;
-    int angle_size_max = 90;
+    int angle_size_max = scan.ranges_.size()/4;
     pra.angles_.resize(13);
     for (int i = 0; i < angle_num; i++)
     {
@@ -62,12 +62,12 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
           continue;
         pra.angles_[i].push_back(j);
       }
-      angle_size_min += 90;
-      angle_size_max += 90;
+      angle_size_min += scan.ranges_.size()/4;
+      angle_size_max += scan.ranges_.size()/4;
     }
     angle_num = 9;
     angle_size_min = 0;
-    angle_size_max = 180;
+    angle_size_max = scan.ranges_.size()/2;
     for (int i = 5; i < angle_num; i++)
     {
       for (int j = 0; j < angle_size; j++)
@@ -79,15 +79,15 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
         pra.angles_[i].push_back(j);
       }
       if (i != 6){
-        angle_size_min += 90;
-        angle_size_max += 90;
+        angle_size_min += scan.ranges_.size()/4;
+        angle_size_max += scan.ranges_.size()/4;
       }
     }
 
     angle_num = 13;
-    angle_size = 360;
+    angle_size = scan.ranges_.size();
     angle_size_min = 0;
-    angle_size_max = 90;
+    angle_size_max = scan.ranges_.size()/4;
     for (int i = 9; i < angle_num; i++)
     {
       for (int j = 0; j < angle_size; j++)
@@ -96,8 +96,8 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
           continue;
         pra.angles_[i].push_back(j);
       }
-      angle_size_min += 90;
-      angle_size_max += 90;
+      angle_size_min += scan.ranges_.size()/4;
+      angle_size_max += scan.ranges_.size()/4;
     }
 
     for(auto &p : particles_)
@@ -142,9 +142,9 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     w = p.likelihood(map_.get(), scan, p, valid_beams_cnt);
     w = (w/(p.angles_[p.angle_].size() - valid_beams_cnt))*100;
 		p.w_ *= w;
-    std::cout << valid_beams_cnt << ",";
+    // std::cout << int(w) << ",";
   }
-  std::cout << "\n";
+  // std::cout << "\n";
 
 	alpha_ = normalizeBelief()/100;
 	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version
