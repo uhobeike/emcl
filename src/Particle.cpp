@@ -27,7 +27,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan)
 	uint16_t lidar_yaw = Pose::get16bitRepresentation(scan.lidar_pose_yaw_);
 
 	double ans = 0.0;
-	for(int i=90;i<130;i+=scan.scan_increment_){
+	for(int i=0;i<scan.ranges_.size();i+=scan.scan_increment_){
 		if(not scan.valid(scan.ranges_[i]))
 			continue;
 		uint16_t a = scan.directions_16bit_[i] + t + lidar_yaw;
@@ -88,7 +88,7 @@ double Particle::likelihood(LikelihoodFieldMap *map, Scan &scan, Particle &p, u_
 void Particle::randomScan(Particle &p)
 {	
   constexpr int MIN = 0;
-  constexpr int MAX = 12;
+  constexpr int MAX = 6;
 	std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<int> distr(MIN, MAX);
@@ -99,7 +99,7 @@ void Particle::randomScan(Particle &p)
 void Particle::randomScan(Particle &p, Particle &pra)
 {	
   constexpr int MIN = 0;
-  constexpr int MAX = 12;
+  constexpr int MAX = 6;
 	std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<int> distr(MIN, MAX);

@@ -53,7 +53,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     int angle_size = scan.ranges_.size();
     int angle_size_min = 0;
     int angle_size_max = scan.ranges_.size()/4;
-    pra.angles_.resize(13);
+    pra.angles_.resize(7);
     for (int i = 0; i < angle_num; i++)
     {
       for (int j = 0; j < angle_size; j++)
@@ -76,7 +76,10 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
           continue;
         else if (!((angle_size_min<=j) && (j<=angle_size_max)) && (i == 7))
           continue;
-        pra.angles_[i].push_back(j);
+        if (i==5)
+          pra.angles_[5].push_back(j);
+        if (i==8)
+          pra.angles_[6].push_back(j);
       }
       if (i != 6){
         angle_size_min += scan.ranges_.size()/4;
@@ -84,21 +87,21 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
       }
     }
 
-    angle_num = 13;
-    angle_size = scan.ranges_.size();
-    angle_size_min = 0;
-    angle_size_max = scan.ranges_.size()/4;
-    for (int i = 9; i < angle_num; i++)
-    {
-      for (int j = 0; j < angle_size; j++)
-      {
-        if(!((angle_size_min<=j) && (j<=angle_size_max)))
-          continue;
-        pra.angles_[i].push_back(j);
-      }
-      angle_size_min += scan.ranges_.size()/4;
-      angle_size_max += scan.ranges_.size()/4;
-    }
+    // angle_num = 13;
+    // angle_size = scan.ranges_.size();
+    // angle_size_min = 0;
+    // angle_size_max = scan.ranges_.size()/4;
+    // for (int i = 9; i < angle_num; i++)
+    // {
+    //   for (int j = 0; j < angle_size; j++)
+    //   {
+    //     if(!((angle_size_min<=j) && (j<=angle_size_max)))
+    //       continue;
+    //     pra.angles_[i].push_back(j);
+    //   }
+    //   angle_size_min += scan.ranges_.size()/4;
+    //   angle_size_max += scan.ranges_.size()/4;
+    // }
 
     for(auto &p : particles_)
 		  p.randomScan(p, pra);
@@ -151,12 +154,13 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
 
   static bool exp_flag = false;
-	if(alpha_ < alpha_threshold_ and valid_pct > open_space_threshold_){
+	if(alpha_ < alpha_threshold_ or valid_pct > open_space_threshold_){
+    std::cout << "gfgdl;fgjljdflgjdjgjldfjgllsdg" << "\n";
 		ROS_INFO("RESET");
 		expansionReset();
     for(auto &p : particles_){
       double w = 0;
-      w = p.likelihood(map_.get(), scan, p);
+      w = p.likelihood(map_.get(), scan);
       w = (w/p.angles_[p.angle_].size())*100;
       p.w_ *= w;
       // std::cout << w << ",";

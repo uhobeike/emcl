@@ -148,6 +148,11 @@ void Mcl::resampling(bool& exp_flag)
         p.randomScan(p);
       }
     }
+	if(exp_flag){
+		for(auto &p : particles_){
+			p.angle_ = 4;
+		}
+  	}
   }
 }
 
