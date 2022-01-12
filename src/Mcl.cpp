@@ -127,10 +127,10 @@ void Mcl::resampling(bool& exp_flag)
 	for(int i=0; i<particles_.size(); i++)
 		particles_[i] = old[chosen[i]];
   
-  if(!exp_flag){
+  // if(!exp_flag){
     constexpr int MIN = 1;
     constexpr int MAX = 500;
-    constexpr int RAND_NUMS_TO_GENERATE = 50;
+    constexpr int RAND_NUMS_TO_GENERATE = 100;
     
     std::random_device rd;
     std::mt19937 eng(rd());
@@ -148,12 +148,7 @@ void Mcl::resampling(bool& exp_flag)
         p.randomScan(p);
       }
     }
-	if(exp_flag){
-		for(auto &p : particles_){
-			p.angle_ = 4;
-		}
-  	}
-  }
+  // }
 }
 
 void Mcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)

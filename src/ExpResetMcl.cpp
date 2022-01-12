@@ -53,7 +53,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     int angle_size = scan.ranges_.size();
     int angle_size_min = 0;
     int angle_size_max = scan.ranges_.size()/4;
-    pra.angles_.resize(7);
+    pra.angles_.resize(9);
     for (int i = 0; i < angle_num; i++)
     {
       for (int j = 0; j < angle_size; j++)
@@ -87,6 +87,20 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
       }
     }
 
+    angle_num = 9;
+    angle_size_min = scan.ranges_.size()/4;
+    angle_size_max = scan.ranges_.size()/2;
+    for (int i = 7; i < angle_num; i++)
+    {
+      for (int j = 0; j < angle_size; j++)
+      {
+        if(((angle_size_min>=j) || ((j>=angle_size_max) && (angle_size_min*3>j))) && (i == 7))
+          pra.angles_[7].push_back(j);
+        else if (!((angle_size_min>=j) || ((j>=angle_size_max) && (angle_size_min*3>j))) && (i == 8))
+          pra.angles_[8].push_back(j);
+      }
+    }
+
     // angle_num = 13;
     // angle_size = scan.ranges_.size();
     // angle_size_min = 0;
@@ -109,9 +123,9 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     init_random_scan_angle_flag = false;
   }
   
-  // for (auto& value : pra.angles_[0])
+  // for (auto& value : pra.angles_[7])
   // {
-  //   std::cout << value;
+  //   std::cout << value << ",";
   // }
   // std::cout << "\n";
 
@@ -154,8 +168,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
 
   static bool exp_flag = false;
-	if(alpha_ < alpha_threshold_ or valid_pct > open_space_threshold_){
-    std::cout << "gfgdl;fgjljdflgjdjgjldfjgllsdg" << "\n";
+	if(alpha_ < alpha_threshold_ ){
 		ROS_INFO("RESET");
 		expansionReset();
     for(auto &p : particles_){
