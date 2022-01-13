@@ -35,7 +35,7 @@ public:
 			double expansion_radius_position, double expansion_radius_orientation);
 	~ExpResetMcl();
 
-	void sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv);
+	bool sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv, sensor_msgs::LaserScan &mode_scan);
 private:
 	double alpha_threshold_;
 	double open_space_threshold_;

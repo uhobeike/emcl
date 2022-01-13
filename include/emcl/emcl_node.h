@@ -40,10 +40,13 @@ private:
 	ros::Publisher particlecloud_pub_;
 	ros::Publisher pose_pub_;
 	ros::Publisher alpha_pub_;
+	ros::Publisher scan_pub_;
 	ros::Subscriber laser_scan_sub_;
 	ros::Subscriber initial_pose_sub_;
 
 	ros::ServiceServer global_loc_srv_;
+
+  sensor_msgs::LaserScan mode_scan_;
 
 	std::string footprint_frame_id_;
 	std::string global_frame_id_;

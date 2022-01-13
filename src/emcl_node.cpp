@@ -36,6 +36,7 @@ void EMclNode::initCommunication(void)
 	particlecloud_pub_ = nh_.advertise<geometry_msgs::PoseArray>("particlecloud", 2, true);
 	pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("mcl_pose", 2, true);
 	alpha_pub_ = nh_.advertise<std_msgs::Float32>("alpha", 2, true);
+	scan_pub_ = nh_.advertise<sensor_msgs::LaserScan>("mode_scan", 2, true);
 	laser_scan_sub_ = nh_.subscribe("scan", 2, &EMclNode::cbScan, this);
 	initial_pose_sub_ = nh_.subscribe("initialpose", 2, &EMclNode::initialPoseReceived, this);
 
@@ -112,6 +113,7 @@ std::shared_ptr<LikelihoodFieldMap> EMclNode::initMap(void)
 void EMclNode::cbScan(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
     scan_frame_id_ = msg->header.frame_id;
+    mode_scan_ = *msg;
     pf_->setScan(msg);
 }
 
@@ -152,7 +154,12 @@ void EMclNode::loop(void)
 	struct timespec ts_start, ts_end;
 	clock_gettime(CLOCK_REALTIME, &ts_start);
 	*/
-	pf_->sensorUpdate(lx, ly, lt, inv);
+  sensor_msgs::LaserScan mode_scan;
+  mode_scan = mode_scan_;
+  // std::cout << "in" << "\n";
+	if (pf_->sensorUpdate(lx, ly, lt, inv, mode_scan))
+    scan_pub_.publish(mode_scan);
+  // std::cout << "out" << "\n";
 	/*
 	clock_gettime(CLOCK_REALTIME, &ts_end);
 	struct tm tm;

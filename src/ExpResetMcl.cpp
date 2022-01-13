@@ -29,10 +29,10 @@ ExpResetMcl::~ExpResetMcl()
 {
 }
 
-void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv)
+bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv, sensor_msgs::LaserScan &mode_scan)
 {
 	if(processed_seq_ == scan_.seq_)
-		return;
+		return false;
 
 	Scan scan;
 	int seq = -1;
@@ -53,7 +53,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
     int angle_size = scan.ranges_.size();
     int angle_size_min = 0;
     int angle_size_max = scan.ranges_.size()/4;
-    pra.angles_.resize(9);
+    pra.angles_.resize(10);
     for (int i = 0; i < angle_num; i++)
     {
       for (int j = 0; j < angle_size; j++)
@@ -101,6 +101,18 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
       }
     }
 
+    angle_num = 10;
+    angle_size_min = scan.ranges_.size()/8;
+    angle_size_max = scan.ranges_.size()/4;
+    for (int i = 9; i < angle_num; i++)
+    {
+      for (int j = 0; j < angle_size; j++)
+      {
+        if(((angle_size_min>=j) || ((j>=(angle_size_max+angle_size_min)) && ((angle_size_max*2+angle_size_min)>j)) || ((j>=(angle_size_max*3+angle_size_min)) && (scan.ranges_.size()>j))) && (i == 9))
+          pra.angles_[9].push_back(j);
+      }
+    }
+
     // angle_num = 13;
     // angle_size = scan.ranges_.size();
     // angle_size_min = 0;
@@ -129,11 +141,43 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
   // }
   // std::cout << "\n";
 
+  std::vector<int8_t> scan_angle;
+
   for (auto &p : particles_)
   {
-    std::cout << p.angle_ << ", ";
+    // std::cout << p.angle_ << ", ";
+    scan_angle.push_back(p.angle_);
   }
-  std::cout << "\n";
+  // std::cout << "\n";
+
+  // 集計する
+  std::vector<size_t> count(256, 0);
+  for(const auto &x : scan_angle){
+      ++count[x];
+  }
+  auto max_iterator = std::max_element(count.begin(), count.end());
+  size_t mode = std::distance(count.begin(), max_iterator);
+  std::cout << "最頻値：" << mode << std::endl;
+
+  int cnt = 0;
+  int cnt2 = 0;
+  for (auto &sr : mode_scan.ranges)
+  {
+    if (pra.angles_[mode].size() > cnt2){
+
+      if (pra.angles_[mode].at(cnt2) == cnt){
+        ++cnt2;
+      }
+      else
+        sr = 0;
+    }
+    else
+      sr = 0;
+
+
+    ++cnt;
+    std::cout << cnt << ", "<< cnt2 << ", " << pra.angles_[mode].size() << std::endl;
+  }
 
 	int i = 0;
 	if (!inv) {
@@ -151,7 +195,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 	double valid_pct = 0.0;
 	int valid_beams = scan.countValidBeams(&valid_pct);
 	if(valid_beams == 0)
-		return;
+		return false;
 
 	for(auto &p : particles_){
     double w = 0;
@@ -189,6 +233,7 @@ void ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 		resetWeight();
 
 	processed_seq_ = scan_.seq_;
+  return true;
 }
 
 void ExpResetMcl::expansionReset(void)
