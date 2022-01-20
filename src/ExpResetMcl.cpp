@@ -29,7 +29,7 @@ ExpResetMcl::~ExpResetMcl()
 {
 }
 
-bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv, sensor_msgs::LaserScan &mode_scan)
+bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, bool inv, sensor_msgs::LaserScan &mode_scan, std_msgs::UInt8 &mode_scan_pattern)
 {
 	if(processed_seq_ == scan_.seq_)
 		return false;
@@ -157,7 +157,9 @@ bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
   }
   auto max_iterator = std::max_element(count.begin(), count.end());
   size_t mode = std::distance(count.begin(), max_iterator);
-  std::cout << "最頻値：" << mode << std::endl;
+  // std::cout << "最頻値：" << mode << std::endl;
+
+  mode_scan_pattern.data = static_cast<int>(mode);
 
   int cnt = 0;
   int cnt2 = 0;
@@ -176,7 +178,7 @@ bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 
 
     ++cnt;
-    std::cout << cnt << ", "<< cnt2 << ", " << pra.angles_[mode].size() << std::endl;
+    // std::cout << cnt << ", "<< cnt2 << ", " << pra.angles_[mode].size() << std::endl;
   }
 
 	int i = 0;

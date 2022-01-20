@@ -13,6 +13,7 @@
 #include "geometry_msgs/PoseArray.h"
 #include "nav_msgs/GetMap.h"
 #include "std_msgs/Float32.h"
+#include "std_msgs/UInt8.h"
 
 namespace emcl {
 
@@ -37,6 +38,7 @@ void EMclNode::initCommunication(void)
 	pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("mcl_pose", 2, true);
 	alpha_pub_ = nh_.advertise<std_msgs::Float32>("alpha", 2, true);
 	scan_pub_ = nh_.advertise<sensor_msgs::LaserScan>("mode_scan", 2, true);
+	scan_pattern_pub_ = nh_.advertise<std_msgs::UInt8>("mode_scan_pattern", 2, true);
 	laser_scan_sub_ = nh_.subscribe("scan", 2, &EMclNode::cbScan, this);
 	initial_pose_sub_ = nh_.subscribe("initialpose", 2, &EMclNode::initialPoseReceived, this);
 
@@ -157,8 +159,10 @@ void EMclNode::loop(void)
   sensor_msgs::LaserScan mode_scan;
   mode_scan = mode_scan_;
   // std::cout << "in" << "\n";
-	if (pf_->sensorUpdate(lx, ly, lt, inv, mode_scan))
+	if (pf_->sensorUpdate(lx, ly, lt, inv, mode_scan, mode_scan_pattern_)){
     scan_pub_.publish(mode_scan);
+    scan_pattern_pub_.publish(mode_scan_pattern_);
+  }
   // std::cout << "out" << "\n";
 	/*
 	clock_gettime(CLOCK_REALTIME, &ts_end);
