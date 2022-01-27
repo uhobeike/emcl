@@ -141,45 +141,44 @@ bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
   // }
   // std::cout << "\n";
 
-  std::vector<int8_t> scan_angle;
+  // std::vector<int8_t> scan_angle;
 
-  for (auto &p : particles_)
-  {
-    // std::cout << p.angle_ << ", ";
-    scan_angle.push_back(p.angle_);
-  }
-  // std::cout << "\n";
+  // for (auto &p : particles_)
+  // {
+  //   // std::cout << p.angle_ << ", ";
+  //   scan_angle.push_back(p.angle_);
+  // }
+  // // std::cout << "\n";
 
-  // 集計する
-  std::vector<size_t> count(256, 0);
-  for(const auto &x : scan_angle){
-      ++count[x];
-  }
-  auto max_iterator = std::max_element(count.begin(), count.end());
-  size_t mode = std::distance(count.begin(), max_iterator);
-  // std::cout << "最頻値：" << mode << std::endl;
+  // // 集計する
+  // std::vector<size_t> count(256, 0);
+  // for(const auto &x : scan_angle){
+  //     ++count[x];
+  // }
+  // auto max_iterator = std::max_element(count.begin(), count.end());
+  // size_t mode = std::distance(count.begin(), max_iterator);
+  // // std::cout << "最頻値：" << mode << std::endl;
 
-  mode_scan_pattern.data = static_cast<int>(mode);
+  // mode_scan_pattern.data = static_cast<int>(mode);
 
-  int cnt = 0;
-  int cnt2 = 0;
-  for (auto &sr : mode_scan.ranges)
-  {
-    if (pra.angles_[mode].size() > cnt2){
+  // int cnt = 0;
+  // int cnt2 = 0;
+  // for (auto &sr : mode_scan.ranges)
+  // {
+  //   if (pra.angles_[mode].size() > cnt2){
 
-      if (pra.angles_[mode].at(cnt2) == cnt){
-        ++cnt2;
-      }
-      else
-        sr = 0;
-    }
-    else
-      sr = 0;
+  //     if (pra.angles_[mode].at(cnt2) == cnt){
+  //       ++cnt2;
+  //     }
+  //     else
+  //       sr = 0;
+  //   }
+  //   else
+  //     sr = 0;
 
 
-    ++cnt;
-    // std::cout << cnt << ", "<< cnt2 << ", " << pra.angles_[mode].size() << std::endl;
-  }
+  //   ++cnt;
+  // }
 
 	int i = 0;
 	if (!inv) {
