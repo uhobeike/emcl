@@ -152,7 +152,28 @@ void EMclNode::loop(void)
 	struct timespec ts_start, ts_end;
 	clock_gettime(CLOCK_REALTIME, &ts_start);
 	*/
+    struct timespec ts_start, ts_end;
+  clock_gettime(CLOCK_REALTIME, &ts_start);
 	pf_->sensorUpdate(lx, ly, lt, inv);
+
+  clock_gettime(CLOCK_REALTIME, &ts_end);
+  struct tm tm;
+  localtime_r( &ts_start.tv_sec, &tm);
+  std::string s,e;
+  s+=std::to_string(tm.tm_sec);
+  s+=std::to_string(ts_start.tv_nsec);
+  localtime_r( &ts_end.tv_sec, &tm);
+  e+=std::to_string(tm.tm_sec);
+  e+=std::to_string(ts_end.tv_nsec);
+  if ((std::stod(e) - std::stod(s))/1000000 > 1 && (std::stod(e) - std::stod(s))/1000000 < 100){
+    static int N = 0;
+        static double z = 0;
+    double ave;
+        z = (std::stod(e) - std::stod(s))/1000000 + (N++)*z;
+    z/=N;
+    ave = z;
+    std::cout << ave << "\n";
+  }
 	/*
 	clock_gettime(CLOCK_REALTIME, &ts_end);
 	struct tm tm;
