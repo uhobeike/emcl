@@ -210,7 +210,7 @@ bool ExpResetMcl::sensorUpdate(double lidar_x, double lidar_y, double lidar_t, b
 
 	alpha_ = normalizeBelief()/100;
 	//alpha_ = nonPenetrationRate( particles_.size() / 20, map_.get(), scan); //new version
-	ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
+	// ROS_INFO("ALPHA: %f / %f", alpha_, alpha_threshold_);
 
   static bool exp_flag = false;
 	if(alpha_ < alpha_threshold_ ){

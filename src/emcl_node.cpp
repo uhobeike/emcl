@@ -166,23 +166,27 @@ void EMclNode::loop(void)
     // scan_pattern_pub_.publish(mode_scan_pattern_);
   }
   clock_gettime(CLOCK_REALTIME, &ts_end);
-    struct tm tm;
-    localtime_r( &ts_start.tv_sec, &tm);
-    // printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
+  struct tm tm;
+  localtime_r( &ts_start.tv_sec, &tm);
+  // printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
   std::string s,e;
   s+=std::to_string(tm.tm_sec);
   s+=std::to_string(ts_start.tv_nsec);
   // std::cout << s << "\n";
-    localtime_r( &ts_end.tv_sec, &tm);
-    // printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
+  localtime_r( &ts_end.tv_sec, &tm);
+  // printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
   e+=std::to_string(tm.tm_sec);
   e+=std::to_string(ts_end.tv_nsec);
+  // std::cout << s.erase(5,10) << "\n";
+  // std::cout << e.erase(5,10) << "\n";
+  // std::cout << s << "\n";
   // std::cout << e << "\n";
-  if ((std::stod(e) - std::stod(s))/100 > 0.001 && (std::stod(e) - std::stod(s))/100 < 100){
+  // std::cout << (std::stod(e) - std::stod(s))/1000000 << "\n";
+  if ((std::stod(e) - std::stod(s))/1000000 > 1 && (std::stod(e) - std::stod(s))/1000000 < 100){
     static int N = 0;
         static double z = 0;
     double ave;
-        z = (std::stod(e) - std::stod(s))/100 + (N++)*z;
+        z = (std::stod(e) - std::stod(s))/1000000 + (N++)*z;
     z/=N;
     ave = z;
     std::cout << ave << "\n";
