@@ -45,6 +45,8 @@ private:
 	double expansion_radius_orientation_;
 
 	void expansionReset(void);
+  void generateScanPattern(Scan scan, Particle &pra);
+  void findModeScanPattern(sensor_msgs::LaserScan &mode_scan, std_msgs::UInt8 &mode_scan_pattern, Particle &pra);
 };
 
 }

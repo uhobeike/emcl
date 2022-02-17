@@ -154,43 +154,30 @@ void EMclNode::loop(void)
 		return;
 	}
 
-	/*
-	struct timespec ts_start, ts_end;
-	clock_gettime(CLOCK_REALTIME, &ts_start);
-	*/
   sensor_msgs::LaserScan mode_scan;
   mode_scan = mode_scan_;
-  // std::cout << "in" << "\n";
-  struct timespec ts_start, ts_end;
-  clock_gettime(CLOCK_REALTIME, &ts_start);
+  // struct timespec ts_start, ts_end;
+  // clock_gettime(CLOCK_REALTIME, &ts_start);
 	if (pf_->sensorUpdate(lx, ly, lt, inv, mode_scan, mode_scan_pattern_)){
     // scan_pub_.publish(mode_scan);
     // scan_pattern_pub_.publish(mode_scan_pattern_);
   }
-  clock_gettime(CLOCK_REALTIME, &ts_end);
-  struct tm tm;
-  localtime_r( &ts_start.tv_sec, &tm);
-  std::string s,e;
-  s+=std::to_string(tm.tm_sec);
-  s+=std::to_string(ts_start.tv_nsec);
-  localtime_r( &ts_end.tv_sec, &tm);
-  e+=std::to_string(tm.tm_sec);
-  e+=std::to_string(ts_end.tv_nsec);
-  if ((std::stod(e) - std::stod(s))/1000000 > 1 && (std::stod(e) - std::stod(s))/1000000 < 100){
-    static double x = 0;
-    x = (std::stod(e) - std::stod(s))/1000000;
-    std::ofstream f;
-    f.open("test.txt", std::ios::app);
-    f << x << "\n";
-  }
-	/*
-	clock_gettime(CLOCK_REALTIME, &ts_end);
-	struct tm tm;
-	localtime_r( &ts_start.tv_sec, &tm);
-	printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
-	localtime_r( &ts_end.tv_sec, &tm);
-	printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
-	*/
+  // clock_gettime(CLOCK_REALTIME, &ts_end);
+  // struct tm tm;
+  // localtime_r( &ts_start.tv_sec, &tm);
+  // std::string s,e;
+  // s+=std::to_string(tm.tm_sec);
+  // s+=std::to_string(ts_start.tv_nsec);
+  // localtime_r( &ts_end.tv_sec, &tm);
+  // e+=std::to_string(tm.tm_sec);
+  // e+=std::to_string(ts_end.tv_nsec);
+  // if ((std::stod(e) - std::stod(s))/1000000 > 1 && (std::stod(e) - std::stod(s))/1000000 < 100){
+  //   static double x = 0;
+  //   x = (std::stod(e) - std::stod(s))/1000000;
+  //   std::ofstream f;
+  //   f.open("test.txt", std::ios::app);
+  //   f << x << "\n";
+  // }
 
 	double x_var, y_var, t_var, xy_cov, yt_cov, tx_cov;
 	pf_->meanPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);
