@@ -14,6 +14,8 @@
 #include "nav_msgs/GetMap.h"
 #include "std_msgs/Float32.h"
 
+#include <fstream>
+
 namespace emcl {
 
 EMclNode::EMclNode() : private_nh_("~")
@@ -148,11 +150,7 @@ void EMclNode::loop(void)
 		return;
 	}
 
-	/*
-	struct timespec ts_start, ts_end;
-	clock_gettime(CLOCK_REALTIME, &ts_start);
-	*/
-    struct timespec ts_start, ts_end;
+  struct timespec ts_start, ts_end;
   clock_gettime(CLOCK_REALTIME, &ts_start);
 	pf_->sensorUpdate(lx, ly, lt, inv);
 
@@ -166,22 +164,12 @@ void EMclNode::loop(void)
   e+=std::to_string(tm.tm_sec);
   e+=std::to_string(ts_end.tv_nsec);
   if ((std::stod(e) - std::stod(s))/1000000 > 1 && (std::stod(e) - std::stod(s))/1000000 < 100){
-    static int N = 0;
-        static double z = 0;
-    double ave;
-        z = (std::stod(e) - std::stod(s))/1000000 + (N++)*z;
-    z/=N;
-    ave = z;
-    std::cout << ave << "\n";
+    static double x = 0;
+    x = (std::stod(e) - std::stod(s))/1000000;
+    std::ofstream f;
+    f.open("test.txt", std::ios::app);
+    f << x << "\n";
   }
-	/*
-	clock_gettime(CLOCK_REALTIME, &ts_end);
-	struct tm tm;
-	localtime_r( &ts_start.tv_sec, &tm);
-	printf("START: %02d.%09ld\n", tm.tm_sec, ts_start.tv_nsec);
-	localtime_r( &ts_end.tv_sec, &tm);
-	printf("END: %02d.%09ld\n", tm.tm_sec, ts_end.tv_nsec);
-	*/
 
 	double x_var, y_var, t_var, xy_cov, yt_cov, tx_cov;
 	pf_->meanPose(x, y, t, x_var, y_var, t_var, xy_cov, yt_cov, tx_cov);
